@@ -1,10 +1,13 @@
 package com.example.SpringSession.service;
 
-import com.example.SpringSession.dto.MyRequestDto;
+import com.example.SpringSession.dto.SearchRequestdto;
+import com.example.SpringSession.dto.SearchResponseDto;
 
-public interface UserService {
+public interface SearchService {
 
-    public String getData(MyRequestDto request, String id);
+   public SearchResponseDto getProducts(SearchRequestdto requestdto);
+
+
 
 
 

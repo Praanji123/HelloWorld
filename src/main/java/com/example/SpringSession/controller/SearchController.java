@@ -1,28 +1,28 @@
 package com.example.SpringSession.controller;
 
-import com.example.SpringSession.service.UserService;
+import com.example.SpringSession.dto.SearchRequestdto;
+import com.example.SpringSession.dto.SearchResponseDto;
+import com.example.SpringSession.service.SearchService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RestController;
-
-import javax.annotation.PostConstruct;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
-public class UserController {
+public class SearchController {
 
 
     @Autowired
-    private UserService userService;
+    private SearchService searchService;
 
-    public UserController(UserService userService) {
-        this.userService = userService;
-        System.out.println("Inside UserController constructor");
-    }
 
-    @PostConstruct
-    public void init()
+    @PostMapping(path="/search")
+    public SearchResponseDto getProductDetails( @RequestBody SearchRequestdto request)
     {
-        System.out.println("inside UserController Post Constructor");
+        return  searchService.getProducts(request);
     }
+
+
+
+
 
 
 
