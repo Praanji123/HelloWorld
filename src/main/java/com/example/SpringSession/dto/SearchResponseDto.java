@@ -6,6 +6,16 @@ public class SearchResponseDto {
 
 
     private List<ProductDTO> products;
+    private List<ProductDTO> locationBasedProd;
+    public List<ProductDTO> getLocationBasedProd() {
+        return locationBasedProd;
+    }
+
+    public void setLocationBasedProd(List<ProductDTO> locationBasedProd) {
+        this.locationBasedProd = locationBasedProd;
+    }
+
+
     public List<ProductDTO> getProducts() {
         return products;
     }

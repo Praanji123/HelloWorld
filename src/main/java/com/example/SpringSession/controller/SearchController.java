@@ -13,12 +13,17 @@ public class SearchController {
     @Autowired
     private SearchService searchService;
 
-
     @PostMapping(path="/search")
-    public SearchResponseDto getProductDetails( @RequestBody SearchRequestdto request)
+    public SearchResponseDto getProductDetails(@RequestBody SearchRequestdto request)
     {
+        String location=request.getLocation();
+        String search=request.getSearchTerm();
         return  searchService.getProducts(request);
     }
+
+
+
+
 
 
 
