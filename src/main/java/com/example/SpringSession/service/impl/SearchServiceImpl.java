@@ -11,6 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 
 @Service
@@ -29,25 +32,44 @@ public class SearchServiceImpl implements SearchService {
 
         SearchResponseDto responseDto=new SearchResponseDto();
 
-        List<ProductDTO> list =  getStringObjectMap(requestdto.getSearchTerm());
+
+        ExecutorService executor = Executors.newFixedThreadPool(2);
+        Runnable task = () -> {
+            List<ProductDTO> list =  getStringObjectMap(requestdto.getSearchTerm());
+            responseDto.setProducts(list);
+        };
+        task.run();
 
         List<ProductDTO> list2=new ArrayList<>();
-        for(int i=0;i<productLocationList.size();i++)
-        {
-            ProductDTO productDTO=new ProductDTO();
-            String brandName=productLocationList.get(i).get("name").toString();
-            String  description=productLocationList.get(i).get("description").toString();
-            //salePrice
-            int  salePrice= ((Double) productLocationList.get(i).get("salePrice")).intValue();
-            boolean inStock=(int)productLocationList.get(i).get("isInStock")==1?true:false;
-            productDTO.setDescription(description);
-            productDTO.setTitle(brandName);
-            productDTO.setSalesPrice(salePrice);
-            productDTO.setInStock(inStock);
-            list2.add(productDTO);
+        Runnable task2 = () -> {
+            for(int i=0;i<productLocationList.size();i++)
+            {
+                ProductDTO productDTO=new ProductDTO();
+                String brandName=productLocationList.get(i).get("name").toString();
+                String  description=productLocationList.get(i).get("description").toString();
+                //salePrice
+                int  salePrice= ((Double) productLocationList.get(i).get("salePrice")).intValue();
+                boolean inStock=(int)productLocationList.get(i).get("isInStock")==1?true:false;
+                productDTO.setDescription(description);
+                productDTO.setTitle(brandName);
+                productDTO.setSalesPrice(salePrice);
+                productDTO.setInStock(inStock);
+                list2.add(productDTO);
+            }
+
+            responseDto.setLocationBasedProd(list2);
+        };
+
+        executor.execute(task);
+        executor.execute(task2);
+        executor.shutdown();
+        try {
+            executor.awaitTermination(60, TimeUnit.SECONDS);
         }
-        responseDto.setProducts(list);
-        responseDto.setLocationBasedProd(list2);
+        catch (InterruptedException e)
+        {
+            e.printStackTrace();
+        }
 
         return responseDto;
     }
