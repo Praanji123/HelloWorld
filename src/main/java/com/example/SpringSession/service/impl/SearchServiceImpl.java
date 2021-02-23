@@ -24,7 +24,7 @@ public class SearchServiceImpl implements SearchService {
 
 
         Map<String, Object> products= searchClient.getProducts(requestdto.getSearchTerm());
-        Map<String,Object> locations=searchClient.getProducts("q="+requestdto.getLocation());
+        Map<String,Object> locations=searchClient.getProducts("q=stockLocation:"+requestdto.getLocation());
 
         List<Map<String,Object>> productObjectList=(List<Map<String, Object>>)((Map)products.get("response")).get("docs");
 
